@@ -9,16 +9,22 @@ This script does the following:
 Note on folder structure:
 └── args.base_dir
     ├── data
+    │   └── *medical_corpus_clean_preprocessed.tsv*
     │   
     ├── filtering
-    │   
-    ├── logs
-    │   
-    ├── models
-    │   ├── *submodel_1*
-    │   ├── *submodel_2*
+    │   ├── *method1_level1.tsv*
+    │   ├── *method2_level1.tsv*
+    │   ├── *method1_level2.tsv*
     │   ...
-    │   └── *submodel_N*
+    │   └── *methodn_leveln.ysv*
+    ├── logs
+    │   ├── *method1_level1*
+    │   ...
+    │   └── *methodn_leveln* 
+    ├── models
+    │   ├── *method1_level1*
+    │   ...
+    │   └── *methodn_leveln*
     ├── tokenizers
     │   └── *dataset_tokenized*
     └── training
@@ -117,8 +123,8 @@ def parse_args():
     parser.add_argument('--base_dir', type=str, required=True, help='Base directory for the project')
     parser.add_argument('--submodel_name', type=str,  help='Name of the single fine-tuned model inside models/ folder')
     parser.add_argument('--dataset_name', type=str, default="dataset_tokenized", help='Name of the tokenized dataset')
-    parser.add_argument('--source_lang', type=str, default="pol", choices=['eng', 'pol'], help='Source language')
-    parser.add_argument('--target_lang', type=str, default="eng", choices=['eng', 'pol'], help='Target language')
+    parser.add_argument('--source_lang', type=str, default="eng", choices=['eng', 'pol'], help='Source language')
+    parser.add_argument('--target_lang', type=str, default="pol", choices=['eng', 'pol'], help='Target language')
 
     return parser.parse_args()
 

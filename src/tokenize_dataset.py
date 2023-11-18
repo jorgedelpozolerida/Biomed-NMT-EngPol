@@ -10,20 +10,27 @@ fine-tuning.
 
 TODO:
 - incorporate dataset for testing
+- remove "head" when testing finished
 
 Note on folder structure:
 └── args.base_dir
     ├── data
+    │   └── *medical_corpus_clean_preprocessed.tsv*
     │   
     ├── filtering
-    │   
-    ├── logs
-    │   
-    ├── models
-    │   ├── *submodel_1*
-    │   ├── *submodel_2*
+    │   ├── *method1_level1.tsv*
+    │   ├── *method2_level1.tsv*
+    │   ├── *method1_level2.tsv*
     │   ...
-    │   └── *submodel_N*
+    │   └── *methodn_leveln.ysv*
+    ├── logs
+    │   ├── *method1_level1*
+    │   ...
+    │   └── *methodn_leveln* 
+    ├── models
+    │   ├── *method1_level1*
+    │   ...
+    │   └── *methodn_leveln*
     ├── tokenizers
     │   └── *dataset_tokenized*
     └── training
@@ -106,7 +113,7 @@ def main(args: Any):
     df_train = pd.read_csv(
         os.path.join(data_folder, args.train_corpus_name),
         usecols=['id', 'pol', 'eng', 'src']
-    ).head(50) # TODO: remove head
+    )
 
     # Load the test dataset
     df_test = pd.read_csv(
@@ -179,9 +186,9 @@ def parse_args():
                         help='Name of device to use')
     parser.add_argument('--dataset_name', type=str, default="dataset_tokenized",
                         help='Name of dataset to create')
-    parser.add_argument('--source_lang', type=str, default="pol", choices=['eng', 'pol'],
+    parser.add_argument('--source_lang', type=str, default="eng", choices=['eng', 'pol'],
                         help='Source language')
-    parser.add_argument('--target_lang', type=str, default="eng", choices=['eng', 'pol'],
+    parser.add_argument('--target_lang', type=str, default="pol", choices=['eng', 'pol'],
                         help='Target language')
     parser.add_argument('--model_name', type=str, default="facebook/mbart-large-50-one-to-many-mmt",
                         choices=["facebook/mbart-large-50-one-to-many-mmt", "facebook/mbart-large-50-many-to-many-mmt"],

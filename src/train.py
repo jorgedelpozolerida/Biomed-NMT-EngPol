@@ -14,7 +14,28 @@ TODO:
 - agree on some nice hyperparaemters for trianing
 - agree on layers to freeze
 
-
+Note on folder structure:
+└── args.base_dir
+    ├── data
+    │   └── *medical_corpus_clean_preprocessed.tsv*
+    │   
+    ├── filtering
+    │   ├── *method1_level1.tsv*
+    │   ├── *method2_level1.tsv*
+    │   ├── *method1_level2.tsv*
+    │   ...
+    │   └── *methodn_leveln.ysv*
+    ├── logs
+    │   ├── *method1_level1*
+    │   ...
+    │   └── *methodn_leveln* 
+    ├── models
+    │   ├── *method1_level1*
+    │   ...
+    │   └── *methodn_leveln*
+    ├── tokenizers
+    │   └── *dataset_tokenized*
+    └── training
 
 @author: jorgedelpozolerida
 @date: 17/11/2023
@@ -37,7 +58,8 @@ import datasets
 from sklearn.model_selection import train_test_split
 
 from transformers import MBart50Tokenizer, MBartForConditionalGeneration, TrainingArguments, Trainer
-
+from transformers.integrations import TensorBoardCallback
+from torch.utils.tensorboard import SummaryWriter
 
 logging.basicConfig(level=logging.INFO)
 _logger = logging.getLogger(__name__)
@@ -104,24 +126,28 @@ def get_run_metadata(args):
 
     return method, level, subname
 
+def ensure_dir(dir):
+    if not os.path.exists(dir):
+        os.mkdir(dir)
+    return dir
+
 def main(args):
 
     assert os.path.isdir(args.base_dir)
     assert args.source_lang != args.target_lang
 
     model_name = "facebook/mbart-large-50-one-to-many-mmt"
-
-    # Setup directories
-    models_folder = os.path.join(args.base_dir, "models")
-    tokenizer_folder = os.path.join(args.base_dir, "tokenizers")
-    training_folder = os.path.join(args.base_dir, "training")
-    logs_folder = os.path.join(args.base_dir, "logs")
-    _logger.info(f"Directories set up: models_folder={models_folder}, tokenizer_folder={tokenizer_folder}, results_folder={training_folder}, logs_folder={logs_folder}")
-
-    # Log all parameters
-    _logger.info(f"Parameters: {args}")
-
     method, level, model_subname = get_run_metadata(args)
+    
+    # Setup directories
+    model_folder = ensure_dir(os.path.join(args.base_dir, "models", model_subname))
+    tokenizer_folder = os.path.join(args.base_dir, "tokenizers")
+    training_folder = ensure_dir(os.path.join(args.base_dir, "training", model_subname))
+    logs_folder = ensure_dir(os.path.join(args.base_dir, "logs", model_subname))
+
+    # Log parameters and method
+    _logger.info(f"Parameters: {args}")
+    _logger.info(f"Methods: {method}, level: {level}")
     
     # Use a GPU if available and specified
     if "gpu" in args.device_name.lower():
@@ -179,29 +205,34 @@ def main(args):
         num_train_epochs=args.num_train_epochs,                 # Number of training epochs
         per_device_train_batch_size=args.train_batch_size,      # Batch size for training (small for GPU memory issues)
         per_device_eval_batch_size=args.eval_batch_size,       # Batch size for evaluation
-        warmup_steps=500,                   # Number of warmup steps
-        weight_decay=0.01,                  # Weight decay if applicable
-        logging_dir=os.path.join(logs_folder, model_subname, ),            # Directory for logs
-        save_strategy='epoch',              # Save strategy
-        evaluation_strategy='steps'         # Evaluation strategy
+        warmup_steps=500,                                  # Number of warmup steps for learning rate scheduler
+        weight_decay=0.01,                                 # Weight decay if applied
+        logging_dir=logs_folder,   # Directory for storing logs
+        logging_steps=10,                                  # Log metrics every 'logging_steps' steps
+        evaluation_strategy='steps',                       # Evaluate every logging_steps
+        eval_steps=10,                                     # Number of steps to run evaluation
+        load_best_model_at_end=True,                       # Load the best model at the end of training
+        metric_for_best_model='bleu',                      # Use BLEU score for best model selection
+        greater_is_better=True                             # Higher BLEU score is better
     )
 
-
     # Initialize Trainer
+    callbacks = [TensorBoardCallback()]
     trainer = Trainer(
         model=model,
         args=training_args,
         train_dataset=tokenized_datasets_filt['train'],
         eval_dataset=tokenized_datasets_filt['val'],
-        tokenizer=tokenizer
+        tokenizer=tokenizer,
+        callbacks=callbacks
     )
-
+    
     # Training
     _logger.info("Starting training")
     trainer.train()
 
     # Save model
-    trainer.save_model(os.path.join(models_folder, model_subname))
+    trainer.save_model(model_folder)
 
 
 
@@ -220,13 +251,13 @@ def parse_args():
                         help='Name of device to use')
     parser.add_argument('--filter_file', type=str, default=None,
                         help='Name of file with ids after filtering')
-    parser.add_argument('--source_lang', type=str, default="pol", choices=['eng', 'pol'],
+    parser.add_argument('--source_lang', type=str, default="eng", choices=['eng', 'pol'],
                         help='Source language')
-    parser.add_argument('--target_lang', type=str, default="eng", choices=['eng', 'pol'],
+    parser.add_argument('--target_lang', type=str, default="pol", choices=['eng', 'pol'],
                         help='Target language')
     parser.add_argument("--num_train_epochs", type=int, default=3, help="Number of training epochs")
-    parser.add_argument("--train_batch_size", type=int, default=2, help="Batch size for training")
-    parser.add_argument("--eval_batch_size", type=int, default=2, help="Batch size for evaluation")
+    parser.add_argument("--train_batch_size", type=int, default=6, help="Batch size for training")
+    parser.add_argument("-- ", type=int, default=12, help="Batch size for evaluation")
 
     return parser.parse_args()
 

@@ -208,9 +208,9 @@ def main(args):
         warmup_steps=500,                                  # Number of warmup steps for learning rate scheduler
         weight_decay=0.01,                                 # Weight decay if applied
         logging_dir=logs_folder,   # Directory for storing logs
-        logging_steps=10,                                  # Log metrics every 'logging_steps' steps
+        logging_steps=500,                                  # Log metrics every 'logging_steps' steps
         evaluation_strategy='steps',                       # Evaluate every logging_steps
-        eval_steps=10,                                     # Number of steps to run evaluation
+        eval_steps=500,                                     # Number of steps to run evaluation
         load_best_model_at_end=True,                       # Load the best model at the end of training
         metric_for_best_model='bleu',                      # Use BLEU score for best model selection
         greater_is_better=True                             # Higher BLEU score is better
@@ -256,8 +256,8 @@ def parse_args():
     parser.add_argument('--target_lang', type=str, default="pol", choices=['eng', 'pol'],
                         help='Target language')
     parser.add_argument("--num_train_epochs", type=int, default=3, help="Number of training epochs")
-    parser.add_argument("--train_batch_size", type=int, default=6, help="Batch size for training")
-    parser.add_argument("-- ", type=int, default=12, help="Batch size for evaluation")
+    parser.add_argument("--train_batch_size", type=int, default=2, help="Batch size for training")
+    parser.add_argument("--eval_batch_size", type=int, default=2, help="Batch size for evaluation")
 
     return parser.parse_args()
 

@@ -82,17 +82,21 @@ def filter_and_split_dataset(args, original_dataset):
     # Create a deep copy of the original dataset to avoid modifying it directly
     dataset = original_dataset.copy()
 
-    # Attempt to read the filter file with comma or tab separator
-    try:
-        ids_selected = pd.read_csv(os.path.join(args.base_dir, "filtering", args.filter_file), sep=',')
-    except pd.errors.ParserError:
-        ids_selected = pd.read_csv(os.path.join(args.base_dir, "filtering", args.filter_file), sep='\t')
+    if args.filter_file is not None:
+        # Attempt to read the filter file with comma or tab separator
+        try:
+            ids_selected = pd.read_csv(os.path.join(args.base_dir, "filtering", args.filter_file), sep=',')
+        except pd.errors.ParserError:
+            ids_selected = pd.read_csv(os.path.join(args.base_dir, "filtering", args.filter_file), sep='\t')
 
-    # Convert 'id' column from the filter file into a set for efficient searching
-    selected_ids_set = set(ids_selected['id'])
+        # Convert 'id' column from the filter file into a set for efficient searching
+        selected_ids_set = set(ids_selected['id'])
 
-    # Filter the 'train_val' split of the dataset
-    train_val_dataset = dataset['train_val'].filter(lambda example: example['id'] in selected_ids_set)
+        # Filter the 'train_val' split of the dataset
+        train_val_dataset = dataset['train_val'].filter(lambda example: example['id'] in selected_ids_set)
+
+    else:
+        train_val_dataset = dataset['train_val']
 
     # Stratified split of the filtered 'train_val' dataset
     train_val_split = train_val_dataset.train_test_split(test_size=0.2, stratify_by_column='src')
@@ -165,11 +169,7 @@ def main(args):
 
 
     # Perform filtering
-    if args.filter_file is not None:
-        tokenized_datasets_filt = filter_and_split_dataset(args, tokenized_datasets)
-    else:
-        tokenized_datasets_filt = tokenized_datasets.copy()
-    
+    tokenized_datasets_filt = filter_and_split_dataset(args, tokenized_datasets)
     
     # Logging
     train_size = len(tokenized_datasets_filt['train'])

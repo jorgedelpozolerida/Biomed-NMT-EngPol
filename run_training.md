@@ -33,7 +33,7 @@ python tokenize_dataset.py --base_dir "/home/data_shares/anlp_jkmj/DATA" --devic
   --dataset_name "dataset_tokenized" --source_lang "eng" --target_lang "pol" \
   --model_name "facebook/mbart-large-50-one-to-many-mmt" \
   --train_corpus_name "medical_corpus_clean_preprocessed.tsv" \
-  --test_corpus_name "medical_corpus_clean_preprocessed.tsv" \
+  --test_corpus_name "WHATEVERNAME_form_janos.tsv" \
   --overwrite
 
 ```

@@ -190,14 +190,14 @@ def main(args):
     model = MBartForConditionalGeneration.from_pretrained(model_name)
 
     # Freeze all layers except the last one. TODO: investigate best layers to freeze
-    msg = 'Unfreezing layers: \n'
-    for name, param in model.named_parameters():
-        if 'model.encoder.layers.11.' in name or 'model.decoder.layers.11.' in name:
-            msg += f"\t{name}\n"
-            param.requires_grad = True
-        else:
-            param.requires_grad = False
-    _logger.info(msg)
+    #msg = 'Unfreezing layers: \n'
+    #for name, param in model.named_parameters():
+    #    if 'model.encoder.layers.11.' in name or 'model.decoder.layers.11.' in name:
+    #        msg += f"\t{name}\n"
+    #        param.requires_grad = True
+    #    else:
+    #        param.requires_grad = False
+    #_logger.info(msg)
     
     # Define your training arguments
     training_args = TrainingArguments(

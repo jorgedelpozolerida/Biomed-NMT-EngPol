@@ -106,16 +106,15 @@ def main(args):
     model_name = "facebook/mbart-large-50-one-to-many-mmt"
     dataset_dir = os.path.join(tokenizer_folder, args.dataset_name)
     if os.path.exists(dataset_dir):
-        raise ValueError(f"Dataset dir exists already, remove: {dataset_dir}")
-    elif not os.path.exists(dataset_dir): 
-        final_dataset.save_to_disk(dataset_dir)
+        raise ValueError(f"Dataset dir exists already, remove: {dataset_dir}")        
 
-    
+
     # Load tokenizer
     tokenizer = MBart50Tokenizer.from_pretrained(model_name, 
                                                     src_lang=MAPPING_LANG[args.source_lang], 
                                                     tgt_lang=MAPPING_LANG[args.target_lang]
-                                                    )  
+                                                    )
+    _logger.info("Loaded tokenizer")
 
     # Mapping function with additional arguments
     preprocess_args = {
@@ -130,29 +129,30 @@ def main(args):
     # Load the training dataset
     df_train = read_csv_corrupt(
         os.path.join(data_folder, args.train_corpus_name),
-        usecols=['id', 'pol', 'eng', 'src']
+        cols_used=['id', 'pol', 'eng', 'src']
         )
 
     # Load the training dataset into Hugging Face datasets
     train_dataset = Dataset.from_pandas(df_train, preserve_index=False)
     tokenized_train = train_dataset.map(lambda x: preprocess_function(x, **preprocess_args), batched=True)
-    
+
     # handle src column to allow future stratified splits
     unique_classes = sorted(set(tokenized_train['src']))
     class_label_feature = ClassLabel(names=unique_classes)
     tokenized_train = tokenized_train.cast_column('src', class_label_feature)
-
+    _logger.info("Training-Val set generated")
 
     # TEST dataset -------------------------------------------------------------
-    
+
     df_test = read_csv_corrupt(
         os.path.join(data_folder, args.test_corpus_name),
-        usecols=['id', 'pol', 'eng'],
+        cols_used=['id', 'pol', 'eng'],
         sep="\t"
     )
     # Load the test dataset into Hugging Face datasets
     test_dataset = Dataset.from_pandas(df_test, preserve_index=False)
     tokenized_test = test_dataset.map(lambda x: preprocess_function(x, **preprocess_args), batched=True)
+    _logger.info("Test set generated")
 
 
     # COMBINED -----------------------------------------------------------------
@@ -163,6 +163,8 @@ def main(args):
         'test': tokenized_test
     })
 
+    final_dataset.save_to_disk(dataset_dir)
+    _logger.info(f"Succesfully tokenized daatset into: {dataset_dir}")
 
 def parse_args():
     '''

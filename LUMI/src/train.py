@@ -40,12 +40,14 @@ Note on folder structure:
 @author: jorgedelpozolerida
 @date: 17/11/2023
 """
-
+# Included in Python
 import os
 import argparse
 import logging                                                                      
 import os
+import json
 
+# Installed apart in container
 import pandas as pd                                                                
 import torch
 import datasets
@@ -55,6 +57,8 @@ from transformers.integrations import TensorBoardCallback
 
 logging.basicConfig(level=logging.INFO)
 _logger = logging.getLogger(__name__)
+
+THISFILE_DIR = os.path.dirname(os.path.abspath(__file__))
 
 # Mapping of column names for languages to mBART50 language codes
 MAPPING_LANG = {
@@ -202,24 +206,25 @@ def main(args):
 
     # MODEL TRAINING -----------------------------------------------------------
     
-    # Load model
+    # Load JSON configuration file for training hyperparameters
+    # see: https://huggingface.co/docs/transformers/main_classes/trainer#transformers.TrainingArguments
+
+    with open(args.config_path, 'r') as file:
+        hyperparams = json.load(file)
+    # Log configuration
+    _logger.info("Training configuration:")
+    _logger.info(json.dumps(hyperparams, indent=4, sort_keys=True))
+
+
+
+    # Load the model
     model = MBartForConditionalGeneration.from_pretrained(model_name)
 
-    # Define your training arguments
+    # Define training arguments using hyperparameters from JSON
     training_args = TrainingArguments(
-        output_dir=training_folder,          # Output directory for model checkpoints
-        num_train_epochs=args.num_train_epochs,                 # Number of training epochs
-        per_device_train_batch_size=args.train_batch_size,      # Batch size for training (small for GPU memory issues)
-        per_device_eval_batch_size=args.eval_batch_size,       # Batch size for evaluation
-        warmup_steps=500,                                  # Number of warmup steps for learning rate scheduler
-        weight_decay=0.01,                                 # Weight decay if applied
-        logging_dir=logs_folder,   # Directory for storing logs
-        logging_steps=500,                                  # Log metrics every 'logging_steps' steps
-        evaluation_strategy='steps',                       # Evaluate every logging_steps
-        eval_steps=500,                                     # Number of steps to run evaluation
-        load_best_model_at_end=True,                       # Load the best model at the end of training
-        metric_for_best_model='bleu',                      # Use BLEU score for best model selection
-        greater_is_better=True                             # Higher BLEU score is better
+        output_dir=training_folder,
+        logging_dir=logs_folder,
+        **hyperparams
     )
 
     # Initialize Trainer
@@ -232,13 +237,14 @@ def main(args):
         tokenizer=tokenizer,
         callbacks=callbacks
     )
-    
-    # Training
+
+
+    # Start training
     _logger.info("Starting training")
     trainer.train()
     _logger.info("Finished training")
 
-    # Save model
+    # Save the model
     trainer.save_model(model_folder)
     _logger.info(f"Succesfully saved model in {model_folder}")
 
@@ -253,6 +259,8 @@ def parse_args():
 
     parser.add_argument('--base_dir', type=str, default=None, required=True,
                         help='Path where all subfolders are present for the project')
+    parser.add_argument('--config_path', type=str, default=None, required=True,
+                        help='Path to config file in json format with hyperparams')
     parser.add_argument('--device_name', type=str, default="cpu", 
                         help='Name of device to use')
     parser.add_argument('--dataset_name', type=str, default="dataset_tokenized",
@@ -267,9 +275,6 @@ def parse_args():
                         help='Source language')
     parser.add_argument('--target_lang', type=str, default="pol", choices=['eng', 'pol'],
                         help='Target language')
-    parser.add_argument("--num_train_epochs", type=int, default=3, help="Number of training epochs")
-    parser.add_argument("--train_batch_size", type=int, default=2, help="Batch size for training")
-    parser.add_argument("--eval_batch_size", type=int, default=2, help="Batch size for evaluation")
 
     return parser.parse_args()
 

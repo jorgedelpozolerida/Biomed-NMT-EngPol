@@ -146,9 +146,9 @@ def main(args):
 
     df_test = read_csv_corrupt(
         os.path.join(data_folder, args.test_corpus_name),
-        cols_used=['id', 'pol', 'eng'],
-        sep="\t"
-    )
+        cols_used=['id', 'pol', 'eng']
+        )
+
     # Load the test dataset into Hugging Face datasets
     test_dataset = Dataset.from_pandas(df_test, preserve_index=False)
     tokenized_test = test_dataset.map(lambda x: preprocess_function(x, **preprocess_args), batched=True)
@@ -164,7 +164,7 @@ def main(args):
     })
 
     final_dataset.save_to_disk(dataset_dir)
-    _logger.info(f"Succesfully tokenized daatset into: {dataset_dir}")
+    _logger.info(f"Succesfully tokenized dataset into: {dataset_dir}")
 
 def parse_args():
     '''

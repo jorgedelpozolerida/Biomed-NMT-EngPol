@@ -1,0 +1,13 @@
+name: lumi_env
+channels:
+  - defaults
+  
+dependencies:
+  - python=3.8
+  - pip
+  - pip:
+    - --extra-index-url https://download.pytorch.org/whl/rocm5.4.2
+    - torch==2.0.1+rocm5.4.2
+  - conda-forge::tokenizers=0.13.3
+  - conda-forge::transformers=4.31.*
+  - conda-forge::accelerate

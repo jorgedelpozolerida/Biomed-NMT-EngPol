@@ -1,0 +1,11 @@
+# Folder
+/scratch/project_465000872
+
+# Create container --------------------
+cotainr build my_container.sif --system=lumi-g --conda-env=my_conda_env.yml
+# test
+cotainr build lumi_env_container_test.sif --base-image=docker://rocm/dev-ubuntu-22.04:5.3.2-complete --conda-env=test-env.yml
+
+# Run some job using container created -------------
+
+srun --partition=<partition> --account=<account> singularity exec my_container.sif python3 my_script.py

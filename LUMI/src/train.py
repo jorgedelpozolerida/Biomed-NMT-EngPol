@@ -42,33 +42,47 @@ Note on folder structure:
 """
 
 import os
-import sys
 import argparse
-import traceback
-
-from typing import Dict, Any
-import logging                                                                      # NOQA E402
-import numpy as np                                                                  # NOQA E402
-import pandas as pd                                                                 # NOQA E402
+import logging                                                                      
 import os
-import sys
+
+import pandas as pd                                                                
 import torch
-import gc
 import datasets
-from sklearn.model_selection import train_test_split
 
 from transformers import MBart50Tokenizer, MBartForConditionalGeneration, TrainingArguments, Trainer
 from transformers.integrations import TensorBoardCallback
-from torch.utils.tensorboard import SummaryWriter
 
 logging.basicConfig(level=logging.INFO)
 _logger = logging.getLogger(__name__)
 
 # Mapping of column names for languages to mBART50 language codes
-MAPPING_LANG: Dict[str, str] = {
+MAPPING_LANG = {
     "pol": "pl_PL",
     "eng": "en_XX"
 }
+
+def read_csv_corrupt(path2file, cols_used):
+    try:
+        d = pd.read_csv(path2file, sep='\t', usecols=cols_used)
+    except pd.errors.ParserError:
+        d = pd.read_csv(path2file, sep=',', usecols=cols_used)
+
+    return d
+
+def subset_trainval_set(original_dataset, n_sentences=10000, seed=42):
+    """
+    Subsets an already filtered training dataset for computational reasons.
+    Selects a random subset of 'size' samples from the training set.
+    """
+    
+    # Shuffle the original training dataset
+    shuffled_dataset = original_dataset['train_val'].shuffle(seed=seed)
+
+    # Select the first 'n_sentences' samples from the shuffled dataset
+    subset_dataset = shuffled_dataset.select(range(n_sentences))
+
+    return subset_dataset
 
 def filter_and_split_dataset(args, original_dataset):
     """
@@ -81,13 +95,12 @@ def filter_and_split_dataset(args, original_dataset):
     
     # Create a deep copy of the original dataset to avoid modifying it directly
     dataset = original_dataset.copy()
+    _logger.info(f"Started filtering dataset '{args.dataset_name}' using {args.filter_file} file")
+    _logger.info(f"\tSize before filtering: {len(dataset['train_val'])}")
 
     if args.filter_file is not None:
         # Attempt to read the filter file with comma or tab separator
-        try:
-            ids_selected = pd.read_csv(os.path.join(args.base_dir, "filtering", args.filter_file), sep=',')
-        except pd.errors.ParserError:
-            ids_selected = pd.read_csv(os.path.join(args.base_dir, "filtering", args.filter_file), sep='\t')
+        ids_selected = read_csv_corrupt(os.path.join(args.base_dir, "filtering", args.filter_file), cols_used=None)
 
         # Convert 'id' column from the filter file into a set for efficient searching
         selected_ids_set = set(ids_selected['id'])
@@ -98,6 +111,13 @@ def filter_and_split_dataset(args, original_dataset):
     else:
         train_val_dataset = dataset['train_val']
 
+    _logger.info(
+        f"\tSize after filtering: {len(dataset['train_val'])}\n")
+
+    # Subset sample_size sentences only for training
+    train_val_dataset = subset_trainval_set(train_val_dataset, n_sentences=args.sample_size, seed=args.seed)
+    _logger.info(f"Succesfully sampled {args.sample_size} sentences using seed={args.seed}")
+
     # Stratified split of the filtered 'train_val' dataset
     train_val_split = train_val_dataset.train_test_split(test_size=0.2, stratify_by_column='src')
 
@@ -105,10 +125,16 @@ def filter_and_split_dataset(args, original_dataset):
     dataset['train'] = train_val_split['train']
     dataset['val'] = train_val_split['test']
 
+    _logger.info(f"Performed stratified splits")
+    _logger.info(f"\ttrain_size: {len(dataset['train'])}, valid_size: {len(dataset['val'])}, test_size: {len(dataset['test'])}")
+
     # Remove the 'train_val' split
     del dataset['train_val']
 
     return dataset
+
+
+
 
 def get_run_metadata(args):
     '''
@@ -116,7 +142,7 @@ def get_run_metadata(args):
     '''
     
     if args.filter_file is None:
-        return None, None, "Baseline"
+        return None, None, f"Baseline_{args.seed}"
     
     filename_split = args.filter_file.split(".")[0].split("_")
     if len(filename_split) < 2:
@@ -130,10 +156,12 @@ def get_run_metadata(args):
 
     return method, level, subname
 
+
 def ensure_dir(dir):
     if not os.path.exists(dir):
         os.mkdir(dir)
     return dir
+
 
 def main(args):
 
@@ -145,7 +173,7 @@ def main(args):
     
     # Setup directories
     model_folder = ensure_dir(os.path.join(args.base_dir, "models", model_subname))
-    tokenizer_folder = os.path.join(args.base_dir, "tokenizers")
+    tokenizer_folder = os.path.join(args.base_dir, "tokenizers") # where tokenized dataset is
     training_folder = ensure_dir(os.path.join(args.base_dir, "training", model_subname))
     logs_folder = ensure_dir(os.path.join(args.base_dir, "logs", model_subname))
 
@@ -170,35 +198,13 @@ def main(args):
 
     # Perform filtering
     tokenized_datasets_filt = filter_and_split_dataset(args, tokenized_datasets)
+
+
+    # MODEL TRAINING -----------------------------------------------------------
     
-    # Logging
-    train_size = len(tokenized_datasets_filt['train'])
-    validation_size = len(tokenized_datasets_filt['val'])
-    test_size = len(tokenized_datasets_filt['test'])
-    total_size_after_filtering = train_size + validation_size
-    total_size_before_filtering = len(tokenized_datasets['train_val'])
-
-    _logger.info(
-        f"Finished filtering dataset '{args.dataset_name}' using {args.filter_file}\n" + \
-        f"\tSize before filtering: {total_size_before_filtering}\n" + \
-        f"\tSize after filtering: {total_size_after_filtering}\n" + \
-        f"\ttrain_size: {train_size}, valid_size: {validation_size}, test_size: {test_size}"
-    )
-
-
     # Load model
     model = MBartForConditionalGeneration.from_pretrained(model_name)
 
-    # Freeze all layers except the last one. TODO: investigate best layers to freeze
-    #msg = 'Unfreezing layers: \n'
-    #for name, param in model.named_parameters():
-    #    if 'model.encoder.layers.11.' in name or 'model.decoder.layers.11.' in name:
-    #        msg += f"\t{name}\n"
-    #        param.requires_grad = True
-    #    else:
-    #        param.requires_grad = False
-    #_logger.info(msg)
-    
     # Define your training arguments
     training_args = TrainingArguments(
         output_dir=training_folder,          # Output directory for model checkpoints
@@ -230,9 +236,11 @@ def main(args):
     # Training
     _logger.info("Starting training")
     trainer.train()
+    _logger.info("Finished training")
 
     # Save model
     trainer.save_model(model_folder)
+    _logger.info(f"Succesfully saved model in {model_folder}")
 
 
 
@@ -250,7 +258,11 @@ def parse_args():
     parser.add_argument('--dataset_name', type=str, default="dataset_tokenized",
                         help='Name of device to use')
     parser.add_argument('--filter_file', type=str, default=None,
-                        help='Name of file with ids after filtering')
+                        help='Name of file with ids after filtering. If None, then no filtering is applied and saved into Baseline_{seed}')
+    parser.add_argument('--sample_size', type=int, default=10000,
+                        help='Number of sentences to sample for training')
+    parser.add_argument('--seed', type=int, default=42,
+                        help='Seed for sampling')
     parser.add_argument('--source_lang', type=str, default="eng", choices=['eng', 'pol'],
                         help='Source language')
     parser.add_argument('--target_lang', type=str, default="pol", choices=['eng', 'pol'],

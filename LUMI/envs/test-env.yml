@@ -1,4 +1,4 @@
-name: test
+name: test_env
 channels:
   - defaults
   - conda-forge
@@ -16,3 +16,4 @@ dependencies:
   - conda-forge::tokenizers=0.13.3
   - conda-forge::transformers=4.31.*
   - conda-forge::accelerate
+  - conda-forge::sentencepiece

@@ -1,0 +1,41 @@
+
+Lmod is automatically replacing "craype-x86-rome" with "craype-x86-trento".
+
+WARNING: 'nodev' mount option set on /tmp, it could be a source of failure during build process
+INFO:    Starting build...
+2023/12/02 19:41:57  info unpack layer: sha256:e96e057aae67380a4ddb16c337c5c3669d97fdff69ec537f02aa2cc30d814281
+2023/12/02 19:41:57  warn xattr{etc/gshadow} ignoring ENOTSUP on setxattr "user.rootlesscontainers"
+2023/12/02 19:41:57  warn xattr{/tmp/tmpcgkd1hdo/build-temp-1895145753/rootfs/etc/gshadow} destination filesystem does not support xattrs, further warnings will be suppressed
+2023/12/02 19:41:58  info unpack layer: sha256:5aaf392dce58d27080b4d48f18a798d6b4df750e09d074045c992ed03faa11e5
+2023/12/02 19:41:58  info unpack layer: sha256:1f126d0f78e5bff6693b317a88512c80fb3f13ab70de537db2f736bfd3818780
+2023/12/02 19:42:53  warn xattr{var/cache/apt/archives/partial} ignoring ENOTSUP on setxattr "user.rootlesscontainers"
+2023/12/02 19:42:53  warn xattr{/tmp/tmpcgkd1hdo/build-temp-1895145753/rootfs/var/cache/apt/archives/partial} destination filesystem does not support xattrs, further warnings will be suppressed
+2023/12/02 19:42:53  info unpack layer: sha256:9acbe3e75c55225cbec092cc20918d7167479f801f45088a0140eb75e9632bd7
+2023/12/02 19:42:53  warn xattr{etc/gshadow} ignoring ENOTSUP on setxattr "user.rootlesscontainers"
+2023/12/02 19:42:53  warn xattr{/tmp/tmpcgkd1hdo/build-temp-1895145753/rootfs/etc/gshadow} destination filesystem does not support xattrs, further warnings will be suppressed
+INFO:    Creating sandbox directory...
+INFO:    Build complete: /tmp/tmpcgkd1hdo/singularity_sandbox
+WARNING: Skipping mount /etc/localtime [binds]: /etc/localtime doesn't exist in container
+WARNING: Skipping mount /etc/localtime [binds]: /etc/localtime doesn't exist in container
+WARNING: Skipping mount /etc/localtime [binds]: /etc/localtime doesn't exist in container
+
+
+==> WARNING: A newer version of conda exists. <==
+  current version: 23.3.1
+  latest version: 23.10.0
+
+Please update conda by running
+
+    $ conda update -n base -c conda-forge conda
+
+Or to minimize the number of packages updated during conda update use
+
+     conda install conda=23.10.0
+
+
+WARNING: Skipping mount /etc/localtime [binds]: /etc/localtime doesn't exist in container
+WARNING: Skipping mount /etc/localtime [binds]: /etc/localtime doesn't exist in container
+WARNING conda.models.version:get_matcher(546): Using .* with relational operator is superfluous and deprecated and will be removed in a future version of conda. Your spec was 1.8.0.*, but conda is ignoring the .* and treating it as 1.8.0
+WARNING conda.models.version:get_matcher(546): Using .* with relational operator is superfluous and deprecated and will be removed in a future version of conda. Your spec was 1.6.0.*, but conda is ignoring the .* and treating it as 1.6.0
+WARNING conda.models.version:get_matcher(546): Using .* with relational operator is superfluous and deprecated and will be removed in a future version of conda. Your spec was 1.7.1.*, but conda is ignoring the .* and treating it as 1.7.1
+WARNING conda.models.version:get_matcher(546): Using .* with relational operator is superfluous and deprecated and will be removed in a future version of conda. Your spec was 1.9.0.*, but conda is ignoring the .* and treating it as 1.9.0

@@ -1,0 +1,6 @@
+# on my local machine:
+scp -r  delpozol@lumi:/scratch/project_465000872/DATA/logs/Baseline/ /home/cerebriu/data/NLP/logs/Baseline/
+tensorboard --logdir=/home/cerebriu/data/NLP/logs/Baseline/
+
+# or better:
+watch -n 600 'rsync -avz --progress delpozol@lumi:/scratch/project_465000872/DATA/logs/Baseline/ /home/cerebriu/data/NLP/logs/Baseline/'

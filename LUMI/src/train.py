@@ -54,6 +54,7 @@ import datasets
 
 from transformers import MBart50Tokenizer, MBartForConditionalGeneration, TrainingArguments, Trainer
 from transformers.integrations import TensorBoardCallback
+import sentencepiece as spm # just ot make sure it is there
 
 logging.basicConfig(level=logging.INFO)
 _logger = logging.getLogger(__name__)
@@ -184,13 +185,7 @@ def main(args):
     # Log parameters and method
     _logger.info(f"Parameters: {args}")
     _logger.info(f"Methods: {method}, level: {level}")
-    
-    # Use a GPU if available and specified
-    if "gpu" in args.device_name.lower():
-        device = torch.device(f"cuda:{args.device_name}" if torch.cuda.is_available() else "cpu")
-    else:
-        device = "cpu"
-    _logger.info(f"Using device: {device}")
+
     
     # Load tokenizer and tokenized dataset
     tokenizer = MBart50Tokenizer.from_pretrained(model_name, 

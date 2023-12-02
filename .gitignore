@@ -163,3 +163,6 @@ datasets
 .DS_Store
 
 tmp
+
+# LUMI
+*.sif

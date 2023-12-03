@@ -1,17 +1,17 @@
 {
-    "num_train_epochs": 3,
-    "per_device_train_batch_size": 8,
-    "per_device_eval_batch_size": 16,
+    "num_train_epochs": 5,
+    "per_device_train_batch_size": 15,
+    "per_device_eval_batch_size": 20,
     "lr_scheduler_type": "linear",
-    "warmup_steps": 500,
+    "warmup_steps": 100,
     "weight_decay": 0.01,
-    "save_strategy": "epoch",
+    "save_strategy": "steps",
     "load_best_model_at_end": true,
-    "metric_for_best_model": "loss",
+    "metric_for_best_model": "bleu",
+    "greater_is_better": true,
     "evaluation_strategy": "steps",
-    "eval_steps": 500,
-    "logging_steps": 100,
+    "eval_steps": 100,
+    "logging_steps": 25,
     "fp16": true,
-    "optim": "adamw_torch",
-    "max_steps": 50
+    "optim": "adamw_torch"
 }

@@ -9,4 +9,4 @@
 #SBATCH --time=0-02:00:00       # Run time (d-hh:mm:ss)
 #SBATCH --account=project_465000872  # Project for billing
 
-singularity exec -B /scratch/project_465000872 ../envs/test_container.sif python3 ../src/tokenize_dataset.py --base_dir /scratch/project_465000872/DATA
+singularity exec -B /scratch/project_465000872 ../envs/test_container_v3.sif python3 ../src/tokenize_dataset.py --base_dir /scratch/project_465000872/DATA

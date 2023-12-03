@@ -46,6 +46,9 @@ import argparse
 import logging                                                                      
 import os
 import json
+import datetime
+import random
+
 
 # Installed apart in container
 import pandas as pd                                                                
@@ -53,7 +56,6 @@ import torch
 import datasets
 
 from transformers import MBart50Tokenizer, MBartForConditionalGeneration, TrainingArguments, Trainer
-from transformers.integrations import TensorBoardCallback
 import sentencepiece as spm # just ot make sure it is there
 
 logging.basicConfig(level=logging.INFO)
@@ -78,18 +80,29 @@ def read_csv_corrupt(path2file, cols_used):
 def subset_trainval_set(original_dataset, n_sentences=10000, seed=42):
     """
     Subsets an already filtered training dataset for computational reasons.
-    Selects a random subset of 'size' samples from the training set.
+    Selects a random subset of 'n_sentences' samples from the training set.
+    
+    Args:
+        original_dataset (datasets.Dataset): The original dataset to be subsetted.
+        n_sentences (int): Number of sentences to select in the subset.
+        seed (int): Random seed for reproducibility.
+
+    Returns:
+        datasets.Dataset: A subset of the original dataset.
     """
     
-    # Shuffle the original training dataset
-    shuffled_dataset = original_dataset['train_val'].shuffle(seed=seed)
+    # Set the seed for reproducibility
+    random.seed(seed)
 
-    # Select the first 'n_sentences' samples from the shuffled dataset
-    subset_dataset = shuffled_dataset.select(range(n_sentences))
+    # Get indices for the subset
+    indices = random.sample(range(len(original_dataset)), n_sentences)
+
+    # Select the subset from the original dataset
+    subset_dataset = original_dataset.select(indices)
 
     return subset_dataset
 
-def filter_and_split_dataset(args, original_dataset):
+def filter_and_sample_and_split_dataset(args, original_dataset):
     """
     Filters and splits a given dataset based on a filter file and stratifies the split.
 
@@ -167,7 +180,6 @@ def ensure_dir(dir):
         os.mkdir(dir)
     return dir
 
-
 def main(args):
 
     assert os.path.isdir(args.base_dir)
@@ -180,7 +192,9 @@ def main(args):
     model_folder = ensure_dir(os.path.join(args.base_dir, "models", model_subname))
     tokenizer_folder = os.path.join(args.base_dir, "tokenizers") # where tokenized dataset is
     training_folder = ensure_dir(os.path.join(args.base_dir, "training", model_subname))
-    logs_folder = ensure_dir(os.path.join(args.base_dir, "logs", model_subname))
+    current_time = datetime.datetime.now()
+    formatted_time = current_time.strftime("run_%Y-%m-%d_%H-%M-%S")
+    logs_folder = ensure_dir(os.path.join(args.base_dir, "logs", model_subname, formatted_time))
 
     # Log parameters and method
     _logger.info(f"Parameters: {args}")
@@ -196,7 +210,7 @@ def main(args):
 
 
     # Perform filtering
-    tokenized_datasets_filt = filter_and_split_dataset(args, tokenized_datasets)
+    tokenized_datasets_filt = filter_and_sample_and_split_dataset(args, tokenized_datasets)
 
 
     # MODEL TRAINING -----------------------------------------------------------
@@ -210,8 +224,6 @@ def main(args):
     _logger.info("Training configuration:")
     _logger.info(json.dumps(hyperparams, indent=4, sort_keys=True))
 
-
-
     # Load the model
     model = MBartForConditionalGeneration.from_pretrained(model_name)
 
@@ -221,18 +233,17 @@ def main(args):
         logging_dir=logs_folder,
         **hyperparams
     )
-
+    
     # Initialize Trainer
-    callbacks = [TensorBoardCallback()]
+    # callbacks = [TensorBoardCallback()]
     trainer = Trainer(
         model=model,
         args=training_args,
         train_dataset=tokenized_datasets_filt['train'],
         eval_dataset=tokenized_datasets_filt['val'],
-        tokenizer=tokenizer,
-        callbacks=callbacks
+        tokenizer=tokenizer
+        # callbacks=callbacks
     )
-
 
     # Start training
     _logger.info("Starting training")
@@ -256,8 +267,6 @@ def parse_args():
                         help='Path where all subfolders are present for the project')
     parser.add_argument('--config_path', type=str, default=None, required=True,
                         help='Path to config file in json format with hyperparams')
-    parser.add_argument('--device_name', type=str, default="cpu", 
-                        help='Name of device to use')
     parser.add_argument('--dataset_name', type=str, default="dataset_tokenized",
                         help='Name of device to use')
     parser.add_argument('--filter_file', type=str, default=None,

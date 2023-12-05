@@ -1,0 +1,6 @@
+
+Lmod is automatically replacing "craype-x86-rome" with "craype-x86-trento".
+
+WARNING: 'nodev' mount option set on /tmp, it could be a source of failure during build process
+INFO:    Starting build...
+slurmstepd: error: *** JOB 5087601 ON nid006064 CANCELLED AT 2023-12-04T17:55:44 ***

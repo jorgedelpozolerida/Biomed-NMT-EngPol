@@ -44,7 +44,6 @@ Note on folder structure:
 import os
 import argparse
 import logging                                                                      
-import os
 import json
 import datetime
 import random
@@ -132,7 +131,7 @@ def filter_and_sample_and_split_dataset(args, original_dataset):
     _logger.info(
         f"\tSize after filtering: {len(dataset['train_val'])}\n")
 
-    # Subset sample_size sentences only for training
+    # Subset sample_size sentences only for training-val splits
     train_val_dataset = subset_trainval_set(train_val_dataset, n_sentences=args.sample_size, seed=args.seed)
     _logger.info(f"Succesfully sampled {args.sample_size} sentences using seed={args.seed}")
 
@@ -159,8 +158,8 @@ def get_run_metadata(args):
     Function to extarct metadata from filtering file for run
     '''
     
-    if args.filter_file is None:
-        return None, None, f"Baseline_{args.seed}"
+    if args.filter_file is None: 
+        return None, None, f"Baseline_seed-{args.seed}_size-{args.sample_size}"
     
     filename_split = args.filter_file.split(".")[0].split("_")
     if len(filename_split) < 2:
@@ -170,7 +169,7 @@ def get_run_metadata(args):
     level = filename_split[-1]
 
     # Create a subname by combining 'method' and 'level'
-    subname = f"{method}_{level}"
+    subname = f"{method}_{level}_seed-{args.seed}_size-{args.sample_size}"
 
     return method, level, subname
 
@@ -193,8 +192,7 @@ def main(args):
     tokenizer_folder = os.path.join(args.base_dir, "tokenizers") # where tokenized dataset is
     training_folder = ensure_dir(os.path.join(args.base_dir, "training", model_subname))
     current_time = datetime.datetime.now()
-    formatted_time = current_time.strftime("run_%Y-%m-%d_%H-%M-%S")
-    logs_folder = ensure_dir(os.path.join(args.base_dir, "logs", model_subname, formatted_time))
+    logs_folder = ensure_dir(os.path.join(args.base_dir, "logs", model_subname))
 
     # Log parameters and method
     _logger.info(f"Parameters: {args}")

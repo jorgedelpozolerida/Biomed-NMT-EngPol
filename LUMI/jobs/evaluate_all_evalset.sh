@@ -11,4 +11,5 @@
 
 singularity exec -B /scratch/project_465000872 ../envs/final_container.sif \
     python3 ../src/evaluate.py \
-    --base_dir /scratch/project_465000872/DATA
+    --base_dir /scratch/project_465000872/DATA \
+    --split_name eval

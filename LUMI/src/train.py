@@ -192,6 +192,8 @@ def main(args):
     tokenizer_folder = os.path.join(args.base_dir, "tokenizers") # where tokenized dataset is
     training_folder = ensure_dir(os.path.join(args.base_dir, "training", model_subname))
     current_time = datetime.datetime.now()
+    formatted_time = current_time.strftime("run_%Y-%m-%d_%H-%M-%S")
+    # logs_folder = ensure_dir(os.path.join(args.base_dir, "logs", model_subname, formatted_time))
     logs_folder = ensure_dir(os.path.join(args.base_dir, "logs", model_subname))
 
     # Log parameters and method

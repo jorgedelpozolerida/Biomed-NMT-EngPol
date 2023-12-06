@@ -5,12 +5,12 @@
 #SBATCH --partition=standard-g  # Partition (queue) name
 #SBATCH --nodes=1               # Total number of nodes
 #SBATCH --gpus-per-node=1       # Allocate one gpu per MPI rank
-#SBATCH --time=0-30:00:00       # Run time (d-hh:mm:ss)
+#SBATCH --time=0-05:00:00       # Run time (d-hh:mm:ss)
 #SBATCH --account=project_465000872  # Project for billing
 
 singularity exec -B /scratch/project_465000872 ../envs/test_container_v3.sif \
     python3 ../src/train.py \
         --base_dir /scratch/project_465000872/DATA \
         --config_path ../src/train_config.json \
-        --seed 42 \
-        --sample_size 700000
+        --seed 69 \
+        --sample_size 100000

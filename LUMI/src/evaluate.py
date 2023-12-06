@@ -181,10 +181,14 @@ def main(args):
                 test_data_temp = tokenized_data[subf]
             else:
                 name, seed, size = get_matadata(model_name)
+                # harcoding this, previosu approach took too long
+                size = args.sample_size
+                seed =args.seed
                 _logger.info(f"Using the following params for sampling: seed={seed}, size={size}" )
                 test_data_temp = get_training_eval_set(args, tokenized_data[subf], size, seed)
-                
-
+            
+            _logger.info(f"Size of test set: {test_data_temp}")
+            
             translation_results = generate_predictions(args, model, tokenizer, test_data_temp, model_name)
             bleu_score = compute_bleu_score([t['prediction'] for t in translation_results], 
                                                 [[t['groundtruth']] for t in translation_results])
@@ -209,7 +213,11 @@ def main(args):
     # Define current time for folder naming
     current_time = datetime.datetime.now()
     formatted_time = current_time.strftime("run_%Y-%m-%d_%H-%M-%S")
-    save_folder = ensure_dir(os.path.join(save_dir, f"{formatted_time}_{args.split_name}"))
+    if args.split_name == "test":
+        savefolder_name = f"{formatted_time}_{args.split_name}"
+    else:
+        savefolder_name = f"{formatted_time}_{args.split_name}_size-{args.sample_size}_seed-{args.seed}"
+    save_folder = ensure_dir(os.path.join(save_dir, savefolder_name))
 
     # Results DataFrame
     df_results = pd.DataFrame(results)
@@ -221,6 +229,7 @@ def main(args):
     # Iterate through unique model names and save their respective translations
     for model_name in df_translations['model_name'].unique():
         model_translations = df_translations[df_translations['model_name'] == model_name]
+        model_translations = model_translations.head(2000) # sample only a few
         if model_name == "facebook/mbart-large-50-one-to-many-mmt":
             model_name = "Pretrained"
         model_save_folder = ensure_dir(os.path.join(save_folder, "predictions"))
@@ -244,7 +253,10 @@ def parse_args():
                         help='Source language')
     parser.add_argument('--target_lang', type=str, default="pol", choices=['eng', 'pol'],
                         help='Target language')
-
+    parser.add_argument('--sample_size', type=int, default=2000,
+                        help='Number of sentences to sample for training')
+    parser.add_argument('--seed', type=int, default=42,
+                        help='Seed for sampling')
     return parser.parse_args()
 
 if __name__ == '__main__':

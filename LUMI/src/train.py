@@ -132,8 +132,9 @@ def filter_and_sample_and_split_dataset(args, original_dataset):
         f"\tSize after filtering: {len(dataset['train_val'])}\n")
 
     # Subset sample_size sentences only for training-val splits
-    train_val_dataset = subset_trainval_set(train_val_dataset, n_sentences=args.sample_size, seed=args.seed)
-    _logger.info(f"Succesfully sampled {args.sample_size} sentences using seed={args.seed}")
+    if args.sample_size is not None:
+        train_val_dataset = subset_trainval_set(train_val_dataset, n_sentences=args.sample_size, seed=args.seed)
+        _logger.info(f"Succesfully sampled {args.sample_size} sentences using seed={args.seed}")
 
     # Stratified split of the filtered 'train_val' dataset
     train_val_split = train_val_dataset.train_test_split(test_size=0.2, stratify_by_column='src')
@@ -183,6 +184,8 @@ def main(args):
 
     assert os.path.isdir(args.base_dir)
     assert args.source_lang != args.target_lang
+
+
 
     model_name = "facebook/mbart-large-50-one-to-many-mmt"
     method, level, model_subname = get_run_metadata(args)
@@ -270,8 +273,8 @@ def parse_args():
     parser.add_argument('--dataset_name', type=str, default="dataset_tokenized",
                         help='Name of device to use')
     parser.add_argument('--filter_file', type=str, default=None,
-                        help='Name of file with ids after filtering. If None, then no filtering is applied and saved into Baseline_{seed}')
-    parser.add_argument('--sample_size', type=int, default=10000,
+                        help='Name of file with ids after filtering. If None, then no filtering is applied and saved into Baseline_seed-{seed}_size-{size}')
+    parser.add_argument('--sample_size', type=int, default=None,
                         help='Number of sentences to sample for training')
     parser.add_argument('--seed', type=int, default=42,
                         help='Seed for sampling')

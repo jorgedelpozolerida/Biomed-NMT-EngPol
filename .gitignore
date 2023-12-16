@@ -166,3 +166,4 @@ tmp
 
 # LUMI
 *.sif
+**/predictions/*

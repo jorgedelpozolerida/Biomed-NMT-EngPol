@@ -1,0 +1,6 @@
+--------------------------------------------------
+Results of evaluation
+{'model': 'facebook/mbart-large-50-one-to-many-mmt', 'bleu_score': 22.40691887614885, 'elapsed_time': 1473.9334576129913}
+{'model': 'Baseline_seed-42_size-700000', 'bleu_score': 22.543627983643027, 'elapsed_time': 1349.918042421341}
+{'model': 'Baseline_seed-42_size-1000', 'bleu_score': 22.195692941663015, 'elapsed_time': 1339.1681172847748}
+{'model': 'Baseline_seed-69_size-100000', 'bleu_score': 22.535045412302573, 'elapsed_time': 1324.18989944458}

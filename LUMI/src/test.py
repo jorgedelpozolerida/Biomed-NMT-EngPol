@@ -36,7 +36,6 @@ def parse_args():
     '''
     parser = argparse.ArgumentParser()
 
-
     parser.add_argument('--config_path', type=str, default=None, required=True,
                         help='Path to config file in json format with hyperparams')
 

@@ -1,0 +1,19 @@
+--------------------------------------------------
+Results of evaluation
+{'model': 'Baseline_seed-42_size-700000', 'bleu_score': 17.40240345700877, 'elapsed_time': 603.74551653862}
+{'model': 'Baseline_seed-7_size-150000', 'bleu_score': 16.847441902099924, 'elapsed_time': 597.9102213382721}
+{'model': 'Baseline_seed-42_size-1000', 'bleu_score': 14.35588185340169, 'elapsed_time': 599.570511341095}
+{'model': 'MUSE_40_seed-42_size-None', 'bleu_score': 17.23906941264911, 'elapsed_time': 598.9910504817963}
+{'model': 'LASER_40_seed-42_size-None', 'bleu_score': 17.411460645174767, 'elapsed_time': 597.8836317062378}
+{'model': 'Baseline_seed-666_size-420000', 'bleu_score': 17.17408484882865, 'elapsed_time': 600.2143838405609}
+{'model': 'Baseline_seed-69_size-420000', 'bleu_score': 17.230874109457968, 'elapsed_time': 598.9937319755554}
+{'model': 'Baseline_seed-666_size-150000', 'bleu_score': 16.714854133073445, 'elapsed_time': 596.3721778392792}
+{'model': 'Baseline_seed-69_size-100000', 'bleu_score': 16.515617014812943, 'elapsed_time': 593.2304911613464}
+{'model': 'MUSE_80_seed-42_size-None', 'bleu_score': 17.071182519115375, 'elapsed_time': 599.2272963523865}
+{'model': 'Baseline_seed-69_size-150000', 'bleu_score': 17.04113851758237, 'elapsed_time': 595.298800945282}
+{'model': 'LABSE_40_seed-42_size-None', 'bleu_score': 17.15116225587292, 'elapsed_time': 594.9010095596313}
+{'model': 'LABSE_80_seed-42_size-None', 'bleu_score': 16.376020399163735, 'elapsed_time': 587.5741384029388}
+{'model': 'Baseline_seed-7_size-420000', 'bleu_score': 17.29690789159489, 'elapsed_time': 597.559412240982}
+{'model': 'BERT_80_seed-42_size-None', 'bleu_score': 16.2736001732603, 'elapsed_time': 596.7536299228668}
+{'model': 'LASER_80_seed-42_size-None', 'bleu_score': 17.113988990853873, 'elapsed_time': 594.3774354457855}
+{'model': 'facebook/mbart-large-50-one-to-many-mmt', 'bleu_score': 14.936372723153058, 'elapsed_time': 561.8442606925964}

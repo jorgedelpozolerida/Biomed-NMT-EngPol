@@ -129,7 +129,7 @@ def filter_and_sample_and_split_dataset(args, original_dataset):
         train_val_dataset = dataset['train_val']
 
     _logger.info(
-        f"\tSize after filtering: {len(dataset['train_val'])}\n")
+        f"\tSize after filtering: {len(train_val_dataset)}\n")
 
     # Subset sample_size sentences only for training-val splits
     if args.sample_size is not None:

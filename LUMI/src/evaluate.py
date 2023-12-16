@@ -39,10 +39,25 @@ MAPPING_LANG = {
 PRETRAINED_MODEL_NAME = "facebook/mbart-large-50-one-to-many-mmt"
 
 
-def load_model(args, model_dir, model_name="facebook/mbart-large-50-one-to-many-mmt"):
-    # Check if custom model is available in the directory; otherwise, load default model
-    model_path = os.path.join(model_dir, model_name) if os.path.exists(os.path.join(model_dir, model_name)) else model_name
+def load_model(args,  model_name):
     
+    # Check if custom model is available in the directory; otherwise, load default model
+    
+    if model_name == "facebook/mbart-large-50-one-to-many-mmt":
+        model_path = model_name
+    else:
+        model_path1 = os.path.join(args.base_dir, "training", model_name)
+        # model_path = os.path.join(args.base_dir, "models", model_name)
+        
+        dirs_model = os.listdir(model_path1)
+        checkpoint_num = [int(i.split("-")[-1]) for i in dirs_model]
+        maxchck = max(checkpoint_num)
+        foldname = f"checkpoint-{maxchck}"
+        
+        model_path = os.path.join(model_path1,foldname )
+        
+
+    _logger.info(f"Model name: {model_name}, model_path: {model_path}")
     model = MBartForConditionalGeneration.from_pretrained(model_path)
 
     # Ensure the model is on the correct device
@@ -167,7 +182,7 @@ def main(args):
         PRETRAINED_MODEL_NAME,
         src_lang=MAPPING_LANG[args.source_lang])
 
-    model_names = [PRETRAINED_MODEL_NAME] + os.listdir(models_folder)
+    model_names =  os.listdir(models_folder) + [PRETRAINED_MODEL_NAME]
     _logger.info(f"Evaluating the following models: {model_names}")
     results = []
     all_translations = []

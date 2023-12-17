@@ -1,0 +1,20 @@
+{
+    "eval_steps": 200,
+    "evaluation_strategy": "steps",
+    "fp16": true,
+    "greater_is_better": true,
+    "load_best_model_at_end": true,
+    "logging_first_step": true,
+    "logging_steps": 20,
+    "logging_strategy": "steps",
+    "lr_scheduler_type": "linear",
+    "metric_for_best_model": "loss",
+    "num_train_epochs": 3,
+    "optim": "adamw_torch",
+    "per_device_eval_batch_size": 20,
+    "per_device_train_batch_size": 15,
+    "save_steps": 1000,
+    "save_strategy": "steps",
+    "warmup_steps": 100,
+    "weight_decay": 0.01
+}

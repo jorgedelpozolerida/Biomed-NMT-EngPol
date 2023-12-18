@@ -53,6 +53,10 @@ The following scripts are worth mentioning:
 ### [Local scripts](src/)
 This folder hosts Python scripts and notebooks run locally used for several tasks
 of the project.
+* [BERT_embedding_gen.py](src/BERT_embedding_gen.py): calculates the similiraty between English and Polish sentences with BERT model
+* [BERT_filtering_levels.ipynb](src/BERT_filtering_levels.ipynb): generate different levels of filtering with BERT model
+* [muse.ipynb](src/muse.ipynb): calculates the similiraty between English and Polish sentences with MUSE model
+* [training_analyses.ipynb](src/training_analyses.ipynb): generate plots for the training steps
 
 <span style="color: red;">TODO: include mains scripts and brief explanation  </span>
 

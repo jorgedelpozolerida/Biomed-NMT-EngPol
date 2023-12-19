@@ -1,87 +1,21 @@
-% Use this file for citations not found in the ACL Anthology (contained in "anthology.bib").
-
-@book{Aho:72,
-    author  = {Alfred V. Aho and Jeffrey D. Ullman},
-    title   = {The Theory of Parsing, Translation and Compiling},
-    year    = "1972",
-    volume  = "1",
-    publisher = {Prentice-Hall},
-    address = {Englewood Cliffs, NJ}
-}
-
-@book{APA:83,
-    author  = {{American Psychological Association}},
-    title   = {Publications Manual},
-    year    = "1983",
-    publisher = {American Psychological Association},
-    address = {Washington, DC}
-}
-
-@article{Chandra:81,
-	author = {Ashok K. Chandra and Dexter C. Kozen and Larry J. Stockmeyer},
-	year = "1981",
-	title = {Alternation},
-	journal = {Journal of the Association for Computing Machinery},
-	volume = "28",
-	number = "1",
-	pages = "114--133",
-	doi = "10.1145/322234.322243",
-}
-
-@inproceedings{andrew2007scalable,
-  title={Scalable training of {L1}-regularized log-linear models},
-  author={Andrew, Galen and Gao, Jianfeng},
-  booktitle={Proceedings of the 24th International Conference on Machine Learning},
-  pages={33--40},
-  year={2007},
-}
-
-@book{Gusfield:97,
-    author  = {Dan Gusfield},
-    title   = {Algorithms on Strings, Trees and Sequences},
-    year    = "1997",
-    publisher = {Cambridge University Press},
-    address = {Cambridge, UK}
-}
-
-@article{rasooli-tetrault-2015,
-    author    = {Mohammad Sadegh Rasooli and Joel R. Tetreault},
-    title     = {Yara Parser: {A} Fast and Accurate Dependency Parser},
-    journal   = {Computing Research Repository},
-    volume    = {arXiv:1503.06733},
-    year      = {2015},
-    url       = {http://arxiv.org/abs/1503.06733},
-    note    = {version 2}
-}
-
-@article{Ando2005,
-	Acmid = {1194905},
-	Author = {Ando, Rie Kubota and Zhang, Tong},
-	Issn = {1532-4435},
-	Issue_Date = {12/1/2005},
-	Journal = {Journal of Machine Learning Research},
-	Month = dec,
-	Numpages = {37},
-	Pages = {1817--1853},
-	Publisher = {JMLR.org},
-	Title = {A Framework for Learning Predictive Structures from Multiple Tasks and Unlabeled Data},
-	Volume = {6},
-	Year = {2005}
-}
-
-%------NOT EXAMPLE---------------------------------------------------------
 @misc{ufal_medical_corpus,
     title = {UFAL Medical Corpus},
     url = {https://ufal.mff.cuni.cz/ufal_medical_corpus},
     note = {Accessed [2023.10.21]}
 }
 
-@misc{khresmoi_summary_translation_test_data_2.0,
-    title = {Khresmoi Summary Translation Test Data 2.0},
-    author = {Dušek, Ondřej; et al.},
-    url = {https://lindat.mff.cuni.cz/repository/xmlui/handle/11234/1-2122},
-    note = {Accessed 2023-12-09}
+@misc{LaBSEHugging,
+    title = {LaBSE},
+    url = {https://huggingface.co/sentence-transformers/LaBSE},
+    note = {Accessed [2023.10.21]}
 }
+@misc{khresmoi_summary_translation_test_data_2.0,
+title = {Khresmoi Summary Translation Test Data 2.0},
+author = {Du{\v s}ek, Ond{\v r}ej and Haji{\v c}, Jan and Hlav{\'a}{\v c}ov{\'a}, Jaroslava and Libovick{\'y}, Jind{\v r}ich and Pecina, Pavel and Tamchyna, Ale{\v s} and Ure{\v s}ov{\'a}, Zde{\v n}ka},
+url = {http://hdl.handle.net/11234/1-2122},
+note = {{LINDAT}/{CLARIAH}-{CZ} digital library at the Institute of Formal and Applied Linguistics ({{\'U}FAL}), Faculty of Mathematics and Physics, Charles University},
+copyright = {Creative Commons - Attribution-{NonCommercial} 4.0 International ({CC} {BY}-{NC} 4.0)},
+year = {2017} }
 
 @misc{MBart50Tokenizer,
     title = {MBart50Tokenizer},
@@ -111,6 +45,31 @@ Eprint = {arXiv:2305.15020},
 	howpublished = {\url{https://github.com/facebookresearch/LASER}},
 	year = {},
 	note = {[Accessed 10-12-2023]},
+}
+
+@inproceedings{LASER,
+    title = "Learning Joint Multilingual Sentence Representations with Neural Machine Translation",
+    author = "Schwenk, Holger  and
+      Douze, Matthijs",
+    editor = "Blunsom, Phil  and
+      Bordes, Antoine  and
+      Cho, Kyunghyun  and
+      Cohen, Shay  and
+      Dyer, Chris  and
+      Grefenstette, Edward  and
+      Hermann, Karl Moritz  and
+      Rimell, Laura  and
+      Weston, Jason  and
+      Yih, Scott",
+    booktitle = "Proceedings of the 2nd Workshop on Representation Learning for {NLP}",
+    month = aug,
+    year = "2017",
+    address = "Vancouver, Canada",
+    publisher = "Association for Computational Linguistics",
+    url = "https://aclanthology.org/W17-2619",
+    doi = "10.18653/v1/W17-2619",
+    pages = "157--167",
+    abstract = "In this paper, we use the framework of neural machine translation to learn joint sentence representations across six very different languages. Our aim is that a representation which is independent of the language, is likely to capture the underlying semantics. We define a new cross-lingual similarity measure, compare up to 1.4M sentence representations and study the characteristics of close sentences. We provide experimental evidence that sentences that are close in embedding space are indeed semantically highly related, but often have quite different structure and syntax. These relations also hold when comparing sentences in different languages.",
 }
 
 @inproceedings{bane2021selecting,
@@ -231,3 +190,31 @@ Eprint = {arXiv:2305.15020},
     author={Devlin, Jacob and Chang, Ming-Wei and Lee, Kenton and Toutanova, Kristina},
     year={2019}, 
     month={May} }
+
+@article{sacreBleu,
+  author       = {Matt Post},
+  title        = {A Call for Clarity in Reporting {BLEU} Scores},
+  journal      = {CoRR},
+  volume       = {abs/1804.08771},
+  year         = {2018},
+  url          = {http://arxiv.org/abs/1804.08771},
+  eprinttype    = {arXiv},
+  eprint       = {1804.08771},
+  timestamp    = {Mon, 13 Aug 2018 16:46:34 +0200},
+  biburl       = {https://dblp.org/rec/journals/corr/abs-1804-08771.bib},
+  bibsource    = {dblp computer science bibliography, https://dblp.org}
+}
+
+@inproceedings{bleu,
+  title={Bleu: a method for automatic evaluation of machine translation},
+  author={Papineni, Kishore and Roukos, Salim and Ward, Todd and Zhu, Wei-Jing},
+  booktitle={Proceedings of the 40th annual meeting of the Association for Computational Linguistics},
+  pages={311--318},
+  year={2002}
+}
+
+@misc{bert-hugging-face,
+    title={BERT multilingual base model (cased)},
+    url={https://huggingface.co/bert-base-multilingual-cased},
+    journal={huggingface.co},
+    note = {[Accessed 10-12-2023]},}

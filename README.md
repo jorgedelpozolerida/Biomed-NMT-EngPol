@@ -8,8 +8,6 @@ Repository containing source code, data and results of final Group Project for A
 
 Experiments were run on [LUMI supercomputer](https://www.lumi-supercomputer.eu/about-lumi/) and full report 
 can be found here: [Advanced_NLP_report.pdf](Advanced_NLP_report.pdf).
-<span style="color: red;">TODO: update report</span>
-
 
 ## Authors
 The authors of the projects are the following:
@@ -21,12 +19,16 @@ The authors of the projects are the following:
 
 
 ## Abstract
-<span style="color: red;">TODO: add </span>
+This paper investigates the impact of data filtering techniques on the efficiency and performance of Neural Machine Translation (NMT) models, focusing on English-Polish translations in the biomedical domain. With the rapid expansion of Large Language Models (LLMs) and the consequent increase in training times, our study emphasizes the need for high-quality training data. We propose selective data filtering as a method to enhance training efficiency without compromising the model's performance. We explore if applying filtering techniques to NMT LLMs can significantly reduce training dataset size while maintaining or even improving translation quality. We use LASER, MUSE, LaBSE, and BERT for filtering the UFAL Medical Corpus to create varying dataset sizes to fine-tune mBART50 model. We focus on filtering out low-quality data and its impact on training time and model performance, assessed using the SacreBLEU metric. We show that certain filtering methods, notably LASER and MUSE, demonstrate a capacity to reduce dataset size significantly while either maintaining or improving the translation quality.
 
-## Results
+## Methods & Results
+We employed four widely used multilingual language-agnostic embedding models — LASER, MUSE, LaBSE and BERT —  to filter and subset the medical-domain corpus using cosine similarity.  Based on these scores we kept 20\% ($\sim$ 150k pairs) and 60\% ($\sim$ 420k pairs) of the best scoring sentences for each method. These eight (two sizes per method) filtered datasets were used to create fine-tuned mBART50 models.
 
-<span style="color: red;">TODO: include conclusion and tables with performance here  </span>
+To allow us to compare the effect the effect of filtering, a baseline model was trained on the full unfiltered dataset (Base-all), and further models were trained on three randomly selected 20\% and 60\% subsets of the data (Base-20\% and Base-60\%) that is, three models trained for every sample size whose evaluation performance will be averaged.
 
+
+Evaluation was conducted on an independent dataset results using SacreBLEU method for the BLEU metric. Results:
+![](results_table.png)
 
 ## Repository structure overview
 

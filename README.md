@@ -59,8 +59,12 @@ of the project.
 * [BERT_filtering_levels.ipynb](src/BERT_filtering_levels.ipynb): generate different levels of filtering with BERT model
 * [muse.ipynb](src/muse.ipynb): calculates the similiraty between English and Polish sentences with MUSE model
 * [generate_LaBSE_embeddings_similarity.ipynb](src/generate_LaBSE_embeddings_similarity.ipynb): calculates the similiraty between English and Polish sentences with LaBSE model
+* [generate_LASER_embeddings_similarity.py](src/generate_LASER_embeddings_similarity.ipynb): calculates the similiraty between English and Polish sentences with LASER model
 * [LaBSE_quantile_split.ipynb](src/LaBSE_quantile_split.ipynb): calculates the similiraty between English and Polish sentences with LaBSE model
 * [training_analyses.ipynb](src/training_analyses.ipynb): generate plots for the training steps
+* [preprocessing.ipynb](src/preprocessing.ipynb): preprocessing of data
+* [preprocessing_v2.ipynb](src/preprocessing_v2.ipynb): preprocessing of data
+* [lASER_filtering_levels.ipynb](src/lASER_filtering_levels.ipynb): generating subsets of for LASER model
 
 <span style="color: red;">TODO: include mains scripts and brief explanation  </span>
 

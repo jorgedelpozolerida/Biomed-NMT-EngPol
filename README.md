@@ -27,7 +27,7 @@ We employed four widely used multilingual language-agnostic embedding models —
 To allow us to compare the effect the effect of filtering, a baseline model was trained on the full unfiltered dataset (Base-all), and further models were trained on three randomly selected 20\% and 60\% subsets of the data (Base-20\% and Base-60\%) that is, three models trained for every sample size whose evaluation performance will be averaged.
 
 
-Evaluation was conducted on an independent dataset results using SacreBLEU method for the BLEU metric. Results:
+Evaluation was conducted on an independent dataset using SacreBLEU method for the BLEU metric. Results:
 ![](results_table.png)
 
 ## Repository structure overview
@@ -65,6 +65,3 @@ of the project.
 * [preprocessing.ipynb](src/preprocessing.ipynb): preprocessing of data
 * [preprocessing_v2.ipynb](src/preprocessing_v2.ipynb): preprocessing of data
 * [lASER_filtering_levels.ipynb](src/lASER_filtering_levels.ipynb): generating subsets of for LASER model
-
-<span style="color: red;">TODO: include mains scripts and brief explanation  </span>
-

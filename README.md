@@ -57,7 +57,7 @@ This folder hosts Python scripts and notebooks run locally used for several task
 of the project.
 * [BERT_embedding_gen.py](src/BERT_embedding_gen.py): calculates the similiraty between English and Polish sentences with BERT model
 * [BERT_filtering_levels.ipynb](src/BERT_filtering_levels.ipynb): generate different levels of filtering with BERT model
-* [muse.ipynb](src/muse.ipynb): calculates the similiraty between English and Polish sentences with MUSE model
+* [muse.ipynb](src/muse.ipynb): calculates the similiraty between English and Polish sentences with MUSE model. It is necessary to download wiki.multi.en.vec and wiki.multi.pl.vec from https://github.com/facebookresearch/MUSE to run the code.
 * [generate_LaBSE_embeddings_similarity.ipynb](src/generate_LaBSE_embeddings_similarity.ipynb): calculates the similiraty between English and Polish sentences with LaBSE model
 * [generate_LASER_embeddings_similarity.py](src/generate_LASER_embeddings_similarity.ipynb): calculates the similiraty between English and Polish sentences with LASER model
 * [LaBSE_quantile_split.ipynb](src/LaBSE_quantile_split.ipynb): calculates the similiraty between English and Polish sentences with LaBSE model

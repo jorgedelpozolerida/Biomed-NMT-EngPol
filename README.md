@@ -26,6 +26,7 @@ We employed four widely used multilingual language-agnostic embedding models —
 
 To allow us to compare the effect the effect of filtering, a baseline model was trained on the full unfiltered dataset (Base-all), and further models were trained on three randomly selected 20\% and 60\% subsets of the data (Base-20\% and Base-60\%) that is, three models trained for every sample size whose evaluation performance will be averaged.
 
+Best performing model can be downloaded [in this link](https://drive.google.com/drive/folders/1J34pPHRLr0YesR_gekR6Wm7SD7rDgirB?usp=sharing).
 
 Evaluation was conducted on an independent dataset using SacreBLEU method for the BLEU metric. Results:
 ![](results_table.png)

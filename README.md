@@ -16,7 +16,8 @@ The authors of the projects are the following:
 - [*Janos Mate*](https://github.com/matejanos), MSc Data Science (ITU)
 - [*Mikolaj Baranski*](https://github.com/MikolajBaranski), MSc Data Science (CBS)
 
-
+## Title
+"Effect of data filtering techniques on neural machine translation performance for English-Polish biomedical domain"
 
 ## Abstract
 This paper investigates the impact of data filtering techniques on the efficiency and performance of Neural Machine Translation (NMT) models, focusing on English-Polish translations in the biomedical domain. With the rapid expansion of Large Language Models (LLMs) and the consequent increase in training times, our study emphasizes the need for high-quality training data. We propose selective data filtering as a method to enhance training efficiency without compromising the model's performance. We explore if applying filtering techniques to NMT LLMs can significantly reduce training dataset size while maintaining or even improving translation quality. We use LASER, MUSE, LaBSE, and BERT for filtering the UFAL Medical Corpus to create varying dataset sizes to fine-tune mBART50 model. We focus on filtering out low-quality data and its impact on training time and model performance, assessed using the SacreBLEU metric. We show that certain filtering methods, notably LASER and MUSE, demonstrate a capacity to reduce dataset size significantly while either maintaining or improving the translation quality.

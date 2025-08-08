@@ -9,6 +9,12 @@ Repository containing source code, data and results for paper "A comparison of d
 Experiments were run on [LUMI supercomputer](https://www.lumi-supercomputer.eu/about-lumi/) and full report 
 can be found here: [paper_report.pdf](paper_report.pdf).
 
+This paper was **accepted for presentation at [KONVENS 2024](https://konvens-2024.univie.ac.at/)**.  
+Unfortunately, we had to **withdraw** due to limited availability of our members to attend.
+
+You can still access the full paper here:  
+📄 [https://doi.org/10.48550/arXiv.2501.16533](https://doi.org/10.48550/arXiv.2501.16533)
+
 ## Authors
 The authors of the projects are the following:
 - [*Jorge del Pozo Lerida*](https://github.com/jorgedelpozolerida)
